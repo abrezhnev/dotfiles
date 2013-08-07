@@ -9,6 +9,7 @@ cd $HOME
 
 # setup emacs
 if [ -d dotfiles/.emacs.d ]; then
+  [ -L .emacs.d ] && rm .emacs.d
   [ -d .emacs.d ] && mv .emacs.d .emacs.d~
   ln -sf dotfiles/.emacs.d .
 fi
@@ -17,17 +18,14 @@ fi
 # The .local/bin directory is pulled from the git repo.
 # The bin directory is created locally.
 # Both are exported to PATH by the standard .bash_profile
-[ -d dotfiles/.local ]         && ln -sd dotfiles/.local
+if [ -d dotfiles/.local ]; then
+  [ -L .local ] && rm .local
+  [ -d .local ] && mv .local .local~
+  ln -sf dotfiles/.local .
+fi
 [ ! -d bin ]                   && mkdir bin
 
-# setup heroku-client to HOME/bin
-if [ -d heroku-client ]; then
-  wget -q http://assets.heroku.com/heroku-client/heroku-client.tgz
-  if [ -f heroku-client.tgz ]; then
-    tar xf heroku-client.tgz
-    [ -f heroku-client/bin/heroku ] && ln -sb $HOME/heroku-client/bin/heroku bin
-    rm heroku-client.tgz
-  else
-    echo "Could not download heroku-client."
-  fi
+# Install heroku-client
+if [ -f /etc/fedora-release ]; then
+  command -v heroku > /dev/null || sudo yum -y install rubygem-heroku
 fi
