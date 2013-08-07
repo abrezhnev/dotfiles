@@ -1,0 +1,13 @@
+#!/bin/sh
+
+cd $HOME
+[ -f dotfiles/.bash_profile ]  && ln -sb dotfiles/.bash_profile .
+[ -f dotfiles/.bashrc ]        && ln -sb dotfiles/.bashrc .
+[ -f dotfiles/.bashrc_custom ] && ln -sb dotfiles/.bashrc_custom .
+[ -f dotfiles/.screenrc ]      && ln -sb dotfiles/.screenrc .
+[ -f dotfiles/.gitconfig ]     && ln -sb dotfiles/.gitconfig .
+
+if [ -d dotfiles/.emacs.d ]; then
+  [ -d .emacs.d ] && mv .emacs.d .emacs.d~
+  ln -sf dotfiles/.emacs.d .
+fi
