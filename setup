@@ -7,7 +7,27 @@ cd $HOME
 [ -f dotfiles/.screenrc ]      && ln -sb dotfiles/.screenrc .
 [ -f dotfiles/.gitconfig ]     && ln -sb dotfiles/.gitconfig .
 
+# setup emacs
 if [ -d dotfiles/.emacs.d ]; then
   [ -d .emacs.d ] && mv .emacs.d .emacs.d~
   ln -sf dotfiles/.emacs.d .
+fi
+
+# Setup directories for private applications and tools.
+# The .local/bin directory is pulled from the git repo.
+# The bin directory is created locally.
+# Both are exported to PATH by the standard .bash_profile
+[ -d dotfiles/.local ]         && ln -sd dotfiles/.local
+[ ! -d bin ]                   && mkdir bin
+
+# setup heroku-client to HOME/bin
+if [ -d heroku-client ]; then
+  wget -q http://assets.heroku.com/heroku-client/heroku-client.tgz
+  if [ -f heroku-client.tgz ]; then
+    tar xf heroku-client.tgz
+    [ -f heroku-client/heroku ] && ln -sb heroku-client/heroku bin/heroku
+    rm heroku-client.tgz
+  else
+    echo "Could not download heroku-client."
+  fi
 fi
